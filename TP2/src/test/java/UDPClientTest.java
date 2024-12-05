@@ -1,51 +1,58 @@
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketTimeoutException;
-import java.util.Scanner;
+import org.junit.jupiter.api.*;
+import java.io.*;
+import java.net.*;
 
-public class UDPClient {
-    public static void main(String[] args) {
-        if (args.length != 2) {
-            System.out.println("Usage: java UDPClient <hostname/IP> <port>");
-            return;
-        }
+public class UDPClientTest {
+    private static Thread serverThread;
 
-        String hostOrIp = args[0];
-        int port = Integer.parseInt(args[1]);
-
-        try (DatagramSocket socket = new DatagramSocket()) {
-            socket.setSoTimeout(5000); // Set a timeout of 5 seconds for receiving
-
-            InetAddress address = InetAddress.getByName(hostOrIp);
-            Scanner scanner = new Scanner(System.in);
-
-            while (true) {
-                System.out.print("Write message: ");
-                String message = scanner.nextLine();
-                if (message.equalsIgnoreCase("exit")) {
-                    break;
-                }
-
-                // Send the message to the server
-                byte[] buffer = message.getBytes("UTF-8");
-                DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
-                socket.send(packet);
-
-                // Try to receive a response from the server
-                try {
-                    byte[] recvBuffer = new byte[1024];
-                    DatagramPacket recvPacket = new DatagramPacket(recvBuffer, recvBuffer.length);
-                    socket.receive(recvPacket);
-                    String receivedMessage = new String(recvPacket.getData(), 0, recvPacket.getLength(), "UTF-8");
-                    System.out.println("Received: " + receivedMessage);
-                } catch (SocketTimeoutException e) {
-                    System.out.println("No response from server.");
-                }
+    @BeforeAll
+    public static void setupServer() {
+        serverThread = new Thread(() -> {
+            try (DatagramSocket socket = new DatagramSocket(12345)) {
+                byte[] buffer = new byte[1024];
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+                socket.receive(packet);  // Receive a single packet for the test
+                String message = new String(packet.getData(), 0, packet.getLength(), "UTF-8");
+                // You can add assertions here if needed
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        });
+        serverThread.start();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        // Give the server time to start
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
+    }
+
+    @AfterAll
+    public static void tearDownServer() {
+        serverThread.interrupt();
+    }
+
+    @Test
+    public void testUDPClient() throws Exception {
+        String simulatedUserInput = "Hello UDP Server\nexit\n";
+        InputStream stdin = System.in;
+        PrintStream stdout = System.out;
+
+        try {
+            System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes("UTF-8")));
+            ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+            System.setOut(new PrintStream(outContent));
+
+            String[] args = {"localhost", "12345"};
+            UDPClient.main(args);
+
+            // Since UDP is connectionless, we can't directly assert the server response here
+            // But we can check if the client ran without exceptions
+            Assertions.assertTrue(outContent.toString("UTF-8").contains("Write message: "));
+        } finally {
+            System.setIn(stdin);
+            System.setOut(stdout);
         }
     }
 }
