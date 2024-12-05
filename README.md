@@ -23,6 +23,7 @@ Additionally, the project includes test classes for each component using JUnit 5
   - [Running the Multi-threaded TCP Server](#running-the-multi-threaded-tcp-server)
   - [Running the UDP Server and Client](#running-the-udp-server-and-client)
 - [Testing](#testing)
+- [Java Network Programming: Multi-Protocol Chat Server and Client with GUI](#Java-Network-Programming:-Multi-Protocol-Chat-Server-and-Client-With-GUI)
 - [License](#license)
 
 ## Prerequisites
@@ -241,7 +242,7 @@ gradle test
 
 
 
-# Java Network Programming: Multi-Protocol Chat Server and Client
+# Java Network Programming: Multi-Protocol Chat Server and Client with GUI
 
 ## Overview
 
