@@ -16,7 +16,6 @@ Additionally, the project includes test classes for each component using JUnit 5
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
-- [Project Structure](#project-structure)
 - [Setup and Installation](#setup-and-installation)
 - [Usage](#usage)
   - [Running the TCP Server and Client](#running-the-tcp-server-and-client)
@@ -32,30 +31,6 @@ Additionally, the project includes test classes for each component using JUnit 5
 - **JUnit 5** library for testing (if you plan to run tests)
 - **Maven** or **Gradle** (optional, for dependency management)
 - An IDE like **IntelliJ IDEA** or **Eclipse** (optional but recommended)
-
-## Project Structure
-
-```
-.
-├── src
-│   ├── main
-│   │   └── java
-│   │       ├── TCPClient.java
-│   │       ├── TCPServer.java
-│   │       ├── TCPMultiServer.java
-│   │       ├── UDPClient.java
-│   │       └── UDPServer.java
-│   └── test
-│       └── java
-│           ├── TCPClientTest.java
-│           ├── TCPServerTest.java
-│           ├── TCPMultiServerTest.java
-│           ├── UDPClientTest.java
-│           └── UDPServerTest.java
-├── README.md
-├── pom.xml                // If using Maven
-└── build.gradle           // If using Gradle
-```
 
 ## Setup and Installation
 
