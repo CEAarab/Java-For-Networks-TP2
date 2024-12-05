@@ -98,12 +98,10 @@ public class Client {
 class SimpleX509TrustManager implements X509TrustManager {
     @Override
     public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-        // Trust all clients
     }
 
     @Override
     public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-        // Trust all servers
     }
 
     @Override
